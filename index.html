@@ -6,7 +6,7 @@
 <title>Lời muốn nói</title>
 <style>
   body {
-    background-color: #f9f4e7;
+    background: linear-gradient(135deg, #f9f4e7, #f1e8d9);
     font-family: 'Georgia', serif;
     color: #3b2f2f;
     display: flex;
@@ -15,20 +15,57 @@
     padding-top: 50px;
     min-height: 100vh;
     margin: 0;
+    animation: fadeBackground 10s ease-in-out infinite alternate;
   }
+
+  @keyframes fadeBackground {
+    from { background-color: #f9f4e7; }
+    to { background-color: #f2e6d3; }
+  }
+
   .paper {
     width: 90%;
     max-width: 700px;
     background: #fffef8;
     padding: 40px 50px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.08);
     line-height: 1.8;
     white-space: pre-line;
+    animation: sway 6s ease-in-out infinite alternate;
   }
+
+  @keyframes sway {
+    0% { transform: rotate(0.2deg); }
+    100% { transform: rotate(-0.2deg); }
+  }
+
   p {
     margin-bottom: 15px;
     text-align: justify;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+  }
+
+  /* hiệu ứng cho từng dòng xuất hiện dần */
+  p:nth-child(1) { animation-delay: 0.5s; }
+  p:nth-child(2) { animation-delay: 1.5s; }
+  p:nth-child(3) { animation-delay: 2.5s; }
+  p:nth-child(4) { animation-delay: 3.5s; }
+  p:nth-child(5) { animation-delay: 4.5s; }
+  p:nth-child(6) { animation-delay: 5.5s; }
+  p:nth-child(7) { animation-delay: 6.5s; }
+  p:nth-child(8) { animation-delay: 7.5s; }
+  p:nth-child(9) { animation-delay: 8.5s; }
+  p:nth-child(10) { animation-delay: 9.5s; }
+  p:nth-child(11) { animation-delay: 10.5s; }
+  p:nth-child(12) { animation-delay: 11.5s; }
+  p:nth-child(13) { animation-delay: 12.5s; }
+  p:nth-child(14) { animation-delay: 13.5s; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style>
 </head>
@@ -51,3 +88,4 @@
 </div>
 </body>
 </html>
+
