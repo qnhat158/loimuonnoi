@@ -2,22 +2,74 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Lời muốn nói 💌</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💌 Bức thư nhỏ 💌</title>
   <style>
     body {
-      background: linear-gradient(135deg, #fff9e6, #fce4ec);
-      font-family: "Georgia", serif;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(to bottom right, #fdfbfb, #ebedee);
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      padding-top: 80px;
-      min-height: 100vh;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
       margin: 0;
-      color: #3b2f2f;
     }
 
-    .fade-in {
-      animation: fadeIn 1s ease forwards;
+    .container {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 40px 50px;
+      text-align: center;
+      max-width: 400px;
+      z-index: 2;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: #ff6b81;
+      margin-bottom: 10px;
+    }
+
+    p.sub {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      width: 80%;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    button {
+      background-color: #ff6b81;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff4757;
+    }
+
+    #message {
+      display: none;
+      font-size: 1rem;
+      color: #333;
+      animation: fadeIn 1s ease-in-out;
+      margin-top: 10px;
     }
 
     @keyframes fadeIn {
@@ -25,145 +77,97 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .paper {
-      background: #fffdf8;
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 10px 35px rgba(0,0,0,0.15);
-      width: 90%;
-      max-width: 700px;
-      line-height: 1.8;
-      display: none;
-    }
-
-    #loginBox {
-      background: white;
-      padding: 40px;
-      border-radius: 16px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      width: 90%;
-      max-width: 400px;
-    }
-
-    #loginBox input {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      width: 80%;
-      margin-top: 10px;
-      font-size: 16px;
-    }
-
-    #loginBox button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #e57373;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: all 0.3s ease;
-    }
-
-    #loginBox button:hover {
-      background: #d32f2f;
-      transform: scale(1.05);
-    }
-
-    #message {
-      margin-top: 15px;
-      font-style: italic;
-    }
-
-    #stats {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.95);
-      padding: 8px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
-  <div id="loginBox" class="fade-in">
-    <h2>💌 Nhập tên để mở thư</h2>
-    <input type="text" id="password" placeholder="Nhập tên...">
-    <br><button onclick="checkPassword()">Mở thư</button>
+  <canvas id="snow"></canvas>
+
+  <div class="container">
+    <h1>💌 Mở thư nhé 💌</h1>
+    <p class="sub">Bức thư này mình muốn gửi đến một người...</p>
+    <input type="text" id="password" placeholder="Nhập 'Thư' để mở...">
+    <button onclick="checkPassword()">Mở thư</button>
     <p id="message"></p>
   </div>
 
-  <div class="paper fade-in" id="letter">
-    <h2 style="text-align:center;">💖 Gửi đến người đặc biệt 💖</h2>
-    <p>Xin chào bạn,</p>
-    <p>Đây là một bức thư nhỏ, chỉ muốn nói rằng bạn thật sự tuyệt vời.  
-    Dù ngày hôm nay có như thế nào, mong bạn vẫn giữ nụ cười và niềm tin nơi trái tim mình 🌷.</p>
-    <p>Cảm ơn bạn đã ghé qua đọc những dòng này 💌</p>
-    <p style="text-align:right;">— Ai đó đang nghĩ về bạn 🌸</p>
-  </div>
+  <!-- Nhạc Trót Yêu -->
+  <audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/08/30/audio_beb2e7b3a8.mp3?filename=lofi-love-song-180940.mp3" type="audio/mpeg">
+  </audio>
 
-  <div id="stats">Đang tải thống kê...</div>
+  <script>
+    // Hiệu ứng tuyết ❄️
+    const canvas = document.getElementById('snow');
+    const ctx = canvas.getContext('2d');
+    let snowflakes = [];
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyA6I0gSynPjirqXfFU72KjL2-by43NhN10",
-      authDomain: "lover-74dcd.firebaseapp.com",
-      databaseURL: "https://lover-74dcd-default-rtdb.firebaseio.com",
-      projectId: "lover-74dcd",
-      storageBucket: "lover-74dcd.appspot.com",
-      messagingSenderId: "463130717113",
-      appId: "1:463130717113:web:5919db5eac12b38b6ce468",
-      measurementId: "G-DVDQGBM1W1"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const statsRef = ref(db, 'stats');
-
-    // Khi tải trang: cập nhật lượt xem
-    get(statsRef)
-      .then(snapshot => {
-        let data = snapshot.val() || { views: 0, correct: 0, wrong: 0 };
-        data.views += 1;
-        return set(statsRef, data).then(() => updateStats(data));
-      })
-      .catch(err => {
-        console.error("Firebase error:", err);
-        document.getElementById("stats").textContent = "❌ Lỗi kết nối Firebase";
-      });
-
-    window.checkPassword = function() {
-      const pass = document.getElementById("password").value.trim();
-      const msg = document.getElementById("message");
-      const box = document.getElementById("loginBox");
-      const letter = document.getElementById("letter");
-
-      get(statsRef).then(snapshot => {
-        let data = snapshot.val() || { views: 0, correct: 0, wrong: 0 };
-        if (pass.toLowerCase() === "thư" || pass.toLowerCase() === "thu") {
-          msg.textContent = "Chào đúng người rồi 💌";
-          box.style.display = "none";
-          letter.style.display = "block";
-          data.correct += 1;
-        } else {
-          msg.textContent = "Sai mất rồi 😢";
-          data.wrong += 1;
-        }
-        return set(statsRef, data).then(() => updateStats(data));
-      });
+    function createSnowflake() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 3 + 1,
+        d: Math.random() + 1
+      };
     }
 
-    function updateStats(data) {
-      document.getElementById("stats").textContent =
-        `👁️ Lượt xem: ${data.views} | ✅ Đúng: ${data.correct} | ❌ Sai: ${data.wrong}`;
+    function drawSnowflakes() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(255,255,255,0.8)";
+      ctx.beginPath();
+      for (let flake of snowflakes) {
+        ctx.moveTo(flake.x, flake.y);
+        ctx.arc(flake.x, flake.y, flake.r, 0, Math.PI * 2, true);
+      }
+      ctx.fill();
+      moveSnowflakes();
+    }
+
+    function moveSnowflakes() {
+      for (let flake of snowflakes) {
+        flake.y += Math.pow(flake.d, 2) + 1;
+        if (flake.y > canvas.height) {
+          flake.x = Math.random() * canvas.width;
+          flake.y = 0;
+        }
+      }
+    }
+
+    function updateSnow() {
+      drawSnowflakes();
+      requestAnimationFrame(updateSnow);
+    }
+
+    for (let i = 0; i < 60; i++) snowflakes.push(createSnowflake());
+    updateSnow();
+
+    // Kiểm tra mật khẩu và phát nhạc 🎵
+    function checkPassword() {
+      const pw = document.getElementById('password').value.trim().toLowerCase();
+      const message = document.getElementById('message');
+      const music = document.getElementById('bgMusic');
+
+      if (["thư", "thu"].includes(pw)) {
+        message.style.display = 'block';
+        message.innerHTML = "💗 Bức thư mở ra rồi...<br>Hóa ra, trót yêu một người là như thế đấy...";
+        music.play();
+      } else {
+        message.style.display = 'block';
+        message.innerHTML = "😢 Sai rồi, thử lại nhé...";
+      }
     }
   </script>
 </body>
