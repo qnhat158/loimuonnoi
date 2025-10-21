@@ -7,7 +7,7 @@
 <style>
   body {
     background: linear-gradient(135deg, #f9f4e7, #f1e8d9);
-    font-family: Georgia, "Times New Roman", Times, serif;
+    font-family: 'Georgia', serif;
     color: #3b2f2f;
     display: flex;
     justify-content: center;
@@ -56,93 +56,62 @@
   p:nth-child(12) { animation-delay: 11.5s; }
   p:nth-child(13) { animation-delay: 12.5s; }
   p:nth-child(14) { animation-delay: 13.5s; }
+
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .overlay {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(12, 12, 12, 0.6);
-    z-index: 9999;
-    padding: 24px;
-  }
-
-  .pw-box {
-    width: 100%;
-    max-width: 420px;
-    background: #fffef8;
-    border-radius: 8px;
-    padding: 28px 26px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  #loginBox {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
     text-align: center;
-    font-family: Georgia, "Times New Roman", Times, serif;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
   }
 
-  .pw-box h2 {
-    margin: 0 0 14px 0;
-    font-size: 20px;
+  #loginBox input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 70%;
+    margin-top: 10px;
   }
 
-  .pw-box p.hint {
-    margin: 0 0 18px 0;
-    color: #555;
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  .pw-box input[type="text"]{
-    width: 100%;
-    padding: 12px 10px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    box-sizing: border-box;
-    margin-bottom: 12px;
-  }
-
-  .pw-box button {
-    padding: 10px 14px;
-    font-size: 15px;
-    border-radius: 6px;
+  #loginBox button {
+    margin-top: 15px;
+    padding: 8px 15px;
     border: none;
-    cursor: pointer;
     background: #3b2f2f;
-    color: #fff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
   }
 
-  .pw-box .msg {
-    margin-top: 12px;
-    color: #b00020;
-    min-height: 18px;
-  }
-
-  .locked { display: none; }
-  .unlocked { display: block; }
-
-  @media (max-width: 480px) {
-    .paper { padding: 22px; }
-    .pw-box { padding: 20px; }
+  #stats {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #555;
+    background: rgba(255,255,255,0.8);
+    padding: 8px 15px;
+    border-radius: 8px;
   }
 </style>
 </head>
 <body>
-
-<div id="overlay" class="overlay">
-  <div class="pw-box">
-    <h2>Nhập tên để mở thư</h2>
-    <p class="hint">Vì để bảo mật danh tính nên nếu bạn muốn đọc vui lòng hãy nhập tên có dấu và đây và phải viết hoa chữ cái đầu(Ví dụ Nhật). Người mà đã từng gặp nhau ở Vũng Tàu vào tháng 8 và đã mua 3 hộp bánh bông lan trứng muối ship trực tiếp lên Thủ Đức ý 🧁</p>
-    <input id="nameInput" type="text" placeholder="Nhập tên..." />
-    <div><button id="openBtn">Mở thư</button></div>
-    <div id="pwMsg" class="msg"></div>
-  </div>
+<div id="loginBox">
+  <h2>Nhập tên để mở thư</h2>
+  <p>Người mà đã từng gặp nhau ở Vũng Tàu vào tháng 8 và đã mua 3 hộp bánh bông lan trứng muối ship trực tiếp lên Thủ Đức ý 💌</p>
+  <input type="text" id="password" placeholder="Nhập tên...">
+  <br>
+  <button onclick="checkPassword()">Mở thư</button>
+  <p id="message"></p>
 </div>
 
-<div id="content" class="paper locked">
+<div class="paper" id="letter" style="display:none;">
 <p>Hi, chào cô nàng gia sư nha, cái người mà đã nhận 3 hộp bông lan của tôi.</p>
 <p>Mình nghĩ là có thể bạn sẽ coi trang IG hoặc Facebook mình lần nữa hoặc là không...</p>
 <p>Mình chỉ hy vọng bạn đọc được dòng chữ đang hiện tại đây thôi.</p>
@@ -159,54 +128,61 @@
 <p>Sau này có cần mình giúp gì thì cứ fl mình lại nhee.</p>
 </div>
 
-<script>
-(function(){
-  const SECRET_NAME = "Thư";
-  const overlay = document.getElementById('overlay');
-  const openBtn = document.getElementById('openBtn');
-  const nameInput = document.getElementById('nameInput');
-  const msg = document.getElementById('pwMsg');
-  const content = document.getElementById('content');
-  let failCount = 0;
+<div id="stats">Đang tải thống kê...</div>
 
-  function normalizeText(s){
-    if(!s) return "";
-    return s.trim().normalize('NFC');
-  }
+<script type="module">
+  // Firebase SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, get, set, increment, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-  function showContent(){
-    overlay.style.display = 'none';
-    content.classList.remove('locked');
-    content.classList.add('unlocked');
-  }
+  const firebaseConfig = {
+    apiKey: "AIzaSyBSIQzMu_YRa7HbNquOtBg-wubumYh7udE",
+    authDomain: "guiaido.firebaseapp.com",
+    projectId: "guiaido",
+    storageBucket: "guiaido.firebasestorage.app",
+    messagingSenderId: "712475204707",
+    appId: "1:712475204707:web:b785d24af82eca17ef2c56",
+    measurementId: "G-VK4F6Q4E1P"
+  };
 
-  async function handleOpen(){
-    msg.textContent = '';
-    let entered = normalizeText(nameInput.value);
-    if(!entered){
-      msg.textContent = 'Bạn chưa nhập tên.';
-      return;
-    }
-    if(entered.toLocaleLowerCase() === normalizeText(SECRET_NAME).toLocaleLowerCase()){
-      showContent();
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const statsRef = ref(db, 'stats');
+
+  // Cộng dồn lượt truy cập mỗi khi ai đó vào trang
+  get(statsRef).then(snapshot => {
+    let data = snapshot.val() || { views: 0, correct: 0 };
+    data.views += 1;
+    set(statsRef, data);
+    updateStats(data);
+  });
+
+  function checkPassword() {
+    const pass = document.getElementById("password").value.trim();
+    const box = document.getElementById("loginBox");
+    const letter = document.getElementById("letter");
+    const msg = document.getElementById("message");
+
+    if (pass.toLowerCase() === "thư" || pass.toLowerCase() === "thu") {
+      msg.textContent = "Chào đúng người rồi 💌";
+      letter.style.display = "block";
+      box.style.display = "none";
+      // tăng lượt nhập đúng
+      get(statsRef).then(snapshot => {
+        let data = snapshot.val() || { views: 0, correct: 0 };
+        data.correct += 1;
+        set(statsRef, data);
+        updateStats(data);
+      });
     } else {
-      failCount++;
-      msg.textContent = 'Tiếc quá bạn không phải là người tôi muốn gửi thông điệp.';
-      const delay = Math.min(1500 + failCount * 400, 5000);
-      openBtn.disabled = true;
-      nameInput.disabled = true;
-      await new Promise(r => setTimeout(r, delay));
-      openBtn.disabled = false;
-      nameInput.disabled = false;
-      nameInput.select();
+      msg.textContent = "Tiếc quá, bạn không phải là người tôi muốn gửi thông điệp 😢";
     }
   }
 
-  openBtn.addEventListener('click', handleOpen);
-  nameInput.addEventListener('keydown', e => { if(e.key === 'Enter') handleOpen(); });
-  nameInput.focus();
-})();
+  function updateStats(data) {
+    document.getElementById("stats").textContent = 
+      `👁️ Lượt truy cập: ${data.views} | 💖 Người nhập đúng: ${data.correct}`;
+  }
 </script>
-
 </body>
 </html>
