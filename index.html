@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lời muốn nói</title>
 <style>
-  /* Font và layout chính */
   body {
     background: linear-gradient(135deg, #f9f4e7, #f1e8d9);
     font-family: Georgia, "Times New Roman", Times, serif;
@@ -18,12 +17,10 @@
     margin: 0;
     animation: fadeBackground 10s ease-in-out infinite alternate;
   }
-
   @keyframes fadeBackground {
     from { background-color: #f9f4e7; }
     to { background-color: #f2e6d3; }
   }
-
   .paper {
     width: 90%;
     max-width: 700px;
@@ -35,20 +32,16 @@
     white-space: pre-line;
     animation: sway 6s ease-in-out infinite alternate;
   }
-
   @keyframes sway {
     0% { transform: rotate(0.2deg); }
     100% { transform: rotate(-0.2deg); }
   }
-
   p {
     margin-bottom: 15px;
     text-align: justify;
     opacity: 0;
     animation: fadeIn 1s ease forwards;
   }
-
-  /* hiệu ứng cho từng dòng xuất hiện dần */
   p:nth-child(1) { animation-delay: 0.5s; }
   p:nth-child(2) { animation-delay: 1.5s; }
   p:nth-child(3) { animation-delay: 2.5s; }
@@ -63,13 +56,11 @@
   p:nth-child(12) { animation-delay: 11.5s; }
   p:nth-child(13) { animation-delay: 12.5s; }
   p:nth-child(14) { animation-delay: 13.5s; }
-
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ====== Overlay mật khẩu ====== */
   .overlay {
     position: fixed;
     inset: 0;
@@ -99,8 +90,9 @@
 
   .pw-box p.hint {
     margin: 0 0 18px 0;
-    color: #666;
+    color: #555;
     font-size: 14px;
+    line-height: 1.5;
   }
 
   .pw-box input[type="text"]{
@@ -129,13 +121,9 @@
     min-height: 18px;
   }
 
-  /* ẩn nội dung khi overlay hiện */
   .locked { display: none; }
-
-  /* nếu đã mở thì cho nội dung hiển thị */
   .unlocked { display: block; }
 
-  /* responsive */
   @media (max-width: 480px) {
     .paper { padding: 22px; }
     .pw-box { padding: 20px; }
@@ -143,21 +131,18 @@
 </style>
 </head>
 <body>
-<!-- Overlay nhập mật mã -->
-<div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
-  <div class="pw-box" role="document">
-    <h2 id="pwTitle">Nhập tên để mở thư</h2>
-    <p class="hint">Vui lòng nhập chính xác tên (có dấu). Nếu đúng, bạn sẽ xem được thông điệp.</p>
-    <input id="nameInput" type="text" placeholder="Nhập tên..." aria-label="Tên người nhận" autocomplete="off" />
-    <div>
-      <button id="openBtn" type="button">Mở thư</button>
-    </div>
-    <div id="pwMsg" class="msg" aria-live="polite"></div>
+
+<div id="overlay" class="overlay">
+  <div class="pw-box">
+    <h2>Nhập tên để mở thư</h2>
+    <p class="hint">Người mà đã từng gặp nhau ở Vũng Tàu vào tháng 8 và đã mua 3 hộp bánh bông lan trứng muối ship trực tiếp lên Thủ Đức ý 🧁</p>
+    <input id="nameInput" type="text" placeholder="Nhập tên..." />
+    <div><button id="openBtn">Mở thư</button></div>
+    <div id="pwMsg" class="msg"></div>
   </div>
 </div>
 
-<!-- Nội dung thư (mặc định ẩn khi overlay hiện) -->
-<div id="content" class="paper locked" aria-hidden="true">
+<div id="content" class="paper locked">
 <p>Hi, chào cô nàng gia sư nha, cái người mà đã nhận 3 hộp bông lan của tôi.</p>
 <p>Mình nghĩ là có thể bạn sẽ coi trang IG hoặc Facebook mình lần nữa hoặc là không...</p>
 <p>Mình chỉ hy vọng bạn đọc được dòng chữ đang hiện tại đây thôi.</p>
@@ -175,60 +160,38 @@
 </div>
 
 <script>
-/*
-  Cách hoạt động:
-  - Tên mật mã chính xác: "Thư" (có dấu, chữ hoa T, chữ thường tùy ý)
-  - So sánh sẽ được chuẩn hóa (loại khoảng trắng đầu-cuối)
-  - Nếu đúng => ẩn overlay, hiện nội dung
-  - Nếu sai => hiện thông báo
-  - Tránh brute-force: thêm delay nhỏ mỗi lần sai (tăng dần)
-*/
-
 (function(){
-  const SECRET_NAME = "Thư"; // <--- mật mã tên (chính xác có dấu)
+  const SECRET_NAME = "Thư";
   const overlay = document.getElementById('overlay');
   const openBtn = document.getElementById('openBtn');
   const nameInput = document.getElementById('nameInput');
   const msg = document.getElementById('pwMsg');
   const content = document.getElementById('content');
-
-  // biến đếm để tăng delay khi đoán sai nhiều lần
   let failCount = 0;
 
-  // chuẩn hóa chuỗi: xóa khoảng trắng hai đầu và chuẩn hoá Unicode
   function normalizeText(s){
     if(!s) return "";
     return s.trim().normalize('NFC');
   }
 
   function showContent(){
-    // ẩn overlay và hiển thị nội dung
     overlay.style.display = 'none';
     content.classList.remove('locked');
     content.classList.add('unlocked');
-    content.setAttribute('aria-hidden','false');
-    msg.textContent = '';
   }
 
   async function handleOpen(){
     msg.textContent = '';
     let entered = normalizeText(nameInput.value);
-
     if(!entered){
       msg.textContent = 'Bạn chưa nhập tên.';
       return;
     }
-
-    // so sánh: chấp nhận chữ hoa/chữ thường -> dùng toLocaleLowerCase để chuẩn
     if(entered.toLocaleLowerCase() === normalizeText(SECRET_NAME).toLocaleLowerCase()){
-      // đúng
       showContent();
-      // chọn focus vào nội dung (trợ năng)
-      content.focus && content.focus();
     } else {
       failCount++;
       msg.textContent = 'Tiếc quá bạn không phải là người tôi muốn gửi thông điệp.';
-      // thêm small delay proportional failCount để hạn chế dò mật khẩu máy móc
       const delay = Math.min(1500 + failCount * 400, 5000);
       openBtn.disabled = true;
       nameInput.disabled = true;
@@ -239,24 +202,11 @@
     }
   }
 
-  // event listeners
   openBtn.addEventListener('click', handleOpen);
-  nameInput.addEventListener('keydown', function(e){
-    if(e.key === 'Enter') handleOpen();
-  });
-
-  // focus input khi mở trang
+  nameInput.addEventListener('keydown', e => { if(e.key === 'Enter') handleOpen(); });
   nameInput.focus();
-
-  // OPTIONAL: nếu muốn cho phép lưu trạng thái "đã mở" trong localStorage
-  // để người đó không phải nhập lại trong lần sau (commented out)
-  /*
-  if(localStorage.getItem('secret_unlocked') === '1'){
-    showContent();
-  }
-  */
-
 })();
 </script>
+
 </body>
 </html>
