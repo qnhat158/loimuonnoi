@@ -104,7 +104,7 @@
 <body>
 <div id="loginBox">
   <h2>Nhập tên để mở thư</h2>
-  <p>Vì để bảo mật.Bạn vui lòng nhập tên có dấu và viết hoa chữ cái đầu. Ví dụ: mình tên nhật thì phải ghi là Nhật. Người mà đã từng gặp nhau ở Vũng Tàu vào tháng 8 và đã mua 3 hộp bánh bông lan trứng muối ship trực tiếp lên Thủ Đức ý 💌</p>
+  <p>Vì để bảo mật. Bạn vui lòng nhập tên có dấu và viết hoa chữ cái đầu. Ví dụ: mình tên Nhật thì phải ghi là Nhật. Người mà đã từng gặp nhau ở Vũng Tàu vào tháng 8 và đã mua 3 hộp bánh bông lan trứng muối ship trực tiếp lên Thủ Đức ý 💌</p>
   <input type="text" id="password" placeholder="Nhập tên...">
   <br>
   <button onclick="checkPassword()">Mở thư</button>
@@ -131,9 +131,9 @@
 <div id="stats">Đang tải thống kê...</div>
 
 <script type="module">
-  // Firebase SDK
+  // --- Firebase SDK ---
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getDatabase, ref, get, set, increment, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBSIQzMu_YRa7HbNquOtBg-wubumYh7udE",
@@ -149,39 +149,43 @@
   const db = getDatabase(app);
   const statsRef = ref(db, 'stats');
 
-  // Cộng dồn lượt truy cập mỗi khi ai đó vào trang
+  // --- Cập nhật lượt truy cập ---
   get(statsRef).then(snapshot => {
-    let data = snapshot.val() || { views: 0, correct: 0 };
+    let data = snapshot.val() || { views: 0, correct: 0, wrong: 0 };
     data.views += 1;
     set(statsRef, data);
     updateStats(data);
   });
 
+  // --- Kiểm tra mật khẩu ---
   function checkPassword() {
     const pass = document.getElementById("password").value.trim();
     const box = document.getElementById("loginBox");
     const letter = document.getElementById("letter");
     const msg = document.getElementById("message");
 
-    if (pass.toLowerCase() === "thư" || pass.toLowerCase() === "thu") {
-      msg.textContent = "Chào đúng người rồi 💌";
-      letter.style.display = "block";
-      box.style.display = "none";
-      // tăng lượt nhập đúng
-      get(statsRef).then(snapshot => {
-        let data = snapshot.val() || { views: 0, correct: 0 };
+    get(statsRef).then(snapshot => {
+      let data = snapshot.val() || { views: 0, correct: 0, wrong: 0 };
+
+      if (pass.toLowerCase() === "thư" || pass.toLowerCase() === "thu") {
+        msg.textContent = "Chào đúng người rồi 💌";
+        letter.style.display = "block";
+        box.style.display = "none";
         data.correct += 1;
-        set(statsRef, data);
-        updateStats(data);
-      });
-    } else {
-      msg.textContent = "Tiếc quá, bạn không phải là người tôi muốn gửi thông điệp 😢";
-    }
+      } else {
+        msg.textContent = "Tiếc quá, bạn không phải là người tôi muốn gửi thông điệp 😢";
+        data.wrong += 1;
+      }
+
+      set(statsRef, data);
+      updateStats(data);
+    });
   }
 
+  // --- Hiển thị thống kê ---
   function updateStats(data) {
     document.getElementById("stats").textContent = 
-      `👁️ Lượt truy cập: ${data.views} | 💖 Người nhập đúng: ${data.correct}`;
+      `👁️ Lượt truy cập: ${data.views} | 💖 Nhập đúng: ${data.correct} | 💔 Nhập sai: ${data.wrong}`;
   }
 </script>
 </body>
