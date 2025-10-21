@@ -1,192 +1,128 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lời muốn nói</title>
-<style>
-  body {
-    background: linear-gradient(135deg, #f9f4e7, #f1e8d9);
-    font-family: 'Georgia', serif;
-    color: #3b2f2f;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 50px;
-    min-height: 100vh;
-    margin: 0;
-    animation: fadeBackground 10s ease-in-out infinite alternate;
-  }
-  @keyframes fadeBackground {
-    from { background-color: #f9f4e7; }
-    to { background-color: #f2e6d3; }
-  }
-  .paper {
-    width: 90%;
-    max-width: 700px;
-    background: #fffef8;
-    padding: 40px 50px;
-    border-radius: 10px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.08);
-    line-height: 1.8;
-    white-space: pre-line;
-    animation: sway 6s ease-in-out infinite alternate;
-  }
-  @keyframes sway {
-    0% { transform: rotate(0.2deg); }
-    100% { transform: rotate(-0.2deg); }
-  }
-  p {
-    margin-bottom: 15px;
-    text-align: justify;
-    opacity: 0;
-    animation: fadeIn 1s ease forwards;
-  }
-  p:nth-child(1) { animation-delay: 0.5s; }
-  p:nth-child(2) { animation-delay: 1.5s; }
-  p:nth-child(3) { animation-delay: 2.5s; }
-  p:nth-child(4) { animation-delay: 3.5s; }
-  p:nth-child(5) { animation-delay: 4.5s; }
-  p:nth-child(6) { animation-delay: 5.5s; }
-  p:nth-child(7) { animation-delay: 6.5s; }
-  p:nth-child(8) { animation-delay: 7.5s; }
-  p:nth-child(9) { animation-delay: 8.5s; }
-  p:nth-child(10) { animation-delay: 9.5s; }
-  p:nth-child(11) { animation-delay: 10.5s; }
-  p:nth-child(12) { animation-delay: 11.5s; }
-  p:nth-child(13) { animation-delay: 12.5s; }
-  p:nth-child(14) { animation-delay: 13.5s; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  #loginBox {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-  }
-
-  #loginBox input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 70%;
-    margin-top: 10px;
-  }
-
-  #loginBox button {
-    margin-top: 15px;
-    padding: 8px 15px;
-    border: none;
-    background: #3b2f2f;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  #stats {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 14px;
-    color: #555;
-    background: rgba(255,255,255,0.8);
-    padding: 8px 15px;
-    border-radius: 8px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <title>Lời muốn nói 💌</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #fdf6e3, #f5e3b9);
+      font-family: "Georgia", serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 50px;
+      min-height: 100vh;
+    }
+    .paper {
+      background: #fffef8;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 700px;
+    }
+    p { line-height: 1.8; }
+    #loginBox {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    #loginBox input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 70%;
+    }
+    #loginBox button {
+      margin-top: 10px;
+      padding: 8px 15px;
+      background: #3b2f2f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #stats {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.9);
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-<div id="loginBox">
-  <h2>Nhập tên để mở thư</h2>
-  <p>Vì để bảo mật. Bạn vui lòng nhập tên có dấu và viết hoa chữ cái đầu. Ví dụ: mình tên Nhật thì phải ghi là Nhật. Người mà đã từng gặp nhau ở Vũng Tàu vào tháng 8 và đã mua 3 hộp bánh bông lan trứng muối ship trực tiếp lên Thủ Đức ý 💌</p>
-  <input type="text" id="password" placeholder="Nhập tên...">
-  <br>
-  <button onclick="checkPassword()">Mở thư</button>
-  <p id="message"></p>
-</div>
+  <div id="loginBox">
+    <h2>Nhập tên để mở thư</h2>
+    <input type="text" id="password" placeholder="Nhập tên...">
+    <br><button onclick="checkPassword()">Mở thư</button>
+    <p id="message"></p>
+  </div>
 
-<div class="paper" id="letter" style="display:none;">
-<p>Hi, chào cô nàng gia sư nha, cái người mà đã nhận 3 hộp bông lan của tôi.</p>
-<p>Mình nghĩ là có thể bạn sẽ coi trang IG hoặc Facebook mình lần nữa hoặc là không...</p>
-<p>Mình chỉ hy vọng bạn đọc được dòng chữ đang hiện tại đây thôi.</p>
-<p>Thật ra thì mình cũng không chắc, hoặc cũng có thể mình có tình cảm với bạn rồi.</p>
-<p>Sau lần mình đi Vũng Tàu mua bánh bông lan cho bạn ý.</p>
-<p>Mình cũng không nghĩ hay có tính toán gì khi kết bạn với bạn, nhưng từ từ mình cũng cũng.</p>
-<p>Và rồi... mình biết mình chả có gì đặc biệt với bạn hết.</p>
-<p>Cũng không thể nào với tới được một người vừa giỏi, vừa xinh như bạn.</p>
-<p>Mình chỉ cảm thấy tiếc nuối và ân hận khi những gì muốn nói lại không được nói.</p>
-<p>Thật ra những thứ mình đăng sau khi kết bạn đều có ẩn ý với bạn hết...</p>
-<p>Chứ không phải mình trẻ con đăng xàm xàm đâu.</p>
-<p>Nhưng mà bạn có bồ rồi và cũng đã huỷ hết Locket với IG mình rồi.</p>
-<p>Cũng hơi buồn, nhưng không sao đâu.</p>
-<p>Sau này có cần mình giúp gì thì cứ fl mình lại nhee.</p>
-</div>
+  <div class="paper" id="letter" style="display:none;">
+    <p>Xin chào, đây là nội dung bức thư thử nghiệm 💌</p>
+  </div>
 
-<div id="stats">Đang tải thống kê...</div>
+  <div id="stats">Đang tải thống kê...</div>
 
-<script type="module">
-  // --- Firebase SDK ---
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBSIQzMu_YRa7HbNquOtBg-wubumYh7udE",
-    authDomain: "guiaido.firebaseapp.com",
-    projectId: "guiaido",
-    storageBucket: "guiaido.firebasestorage.app",
-    messagingSenderId: "712475204707",
-    appId: "1:712475204707:web:b785d24af82eca17ef2c56",
-    measurementId: "G-VK4F6Q4E1P"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6I0gSynPjirqXfFU72KjL2-by43NhN10",
+      authDomain: "lover-74dcd.firebaseapp.com",
+      databaseURL: "https://lover-74dcd-default-rtdb.firebaseio.com",
+      projectId: "lover-74dcd",
+      storageBucket: "lover-74dcd.firebasestorage.app",
+      messagingSenderId: "463130717113",
+      appId: "1:463130717113:web:5919db5eac12b38b6ce468",
+      measurementId: "G-DVDQGBM1W1"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const statsRef = ref(db, 'stats');
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const statsRef = ref(db, 'stats');
 
-  // --- Cập nhật lượt truy cập ---
-  get(statsRef).then(snapshot => {
-    let data = snapshot.val() || { views: 0, correct: 0, wrong: 0 };
-    data.views += 1;
-    set(statsRef, data);
-    updateStats(data);
-  });
-
-  // --- Kiểm tra mật khẩu ---
-  function checkPassword() {
-    const pass = document.getElementById("password").value.trim();
-    const box = document.getElementById("loginBox");
-    const letter = document.getElementById("letter");
-    const msg = document.getElementById("message");
-
+    // Khi tải trang: cập nhật lượt xem
     get(statsRef).then(snapshot => {
       let data = snapshot.val() || { views: 0, correct: 0, wrong: 0 };
-
-      if (pass.toLowerCase() === "thư" || pass.toLowerCase() === "thu") {
-        msg.textContent = "Chào đúng người rồi 💌";
-        letter.style.display = "block";
-        box.style.display = "none";
-        data.correct += 1;
-      } else {
-        msg.textContent = "Tiếc quá, bạn không phải là người tôi muốn gửi thông điệp 😢";
-        data.wrong += 1;
-      }
-
+      data.views += 1;
       set(statsRef, data);
       updateStats(data);
     });
-  }
 
-  // --- Hiển thị thống kê ---
-  function updateStats(data) {
-    document.getElementById("stats").textContent = 
-      `👁️ Lượt truy cập: ${data.views} | 💖 Nhập đúng: ${data.correct} | 💔 Nhập sai: ${data.wrong}`;
-  }
-</script>
+    function checkPassword() {
+      const pass = document.getElementById("password").value.trim();
+      const msg = document.getElementById("message");
+      const box = document.getElementById("loginBox");
+      const letter = document.getElementById("letter");
+
+      get(statsRef).then(snapshot => {
+        let data = snapshot.val() || { views: 0, correct: 0, wrong: 0 };
+        if (pass.toLowerCase() === "thư" || pass.toLowerCase() === "thu") {
+          msg.textContent = "Chào đúng người rồi 💌";
+          box.style.display = "none";
+          letter.style.display = "block";
+          data.correct += 1;
+        } else {
+          msg.textContent = "Sai mất rồi 😢";
+          data.wrong += 1;
+        }
+        set(statsRef, data);
+        updateStats(data);
+      });
+    }
+
+    function updateStats(data) {
+      document.getElementById("stats").textContent =
+        `👁️ Lượt xem: ${data.views} | ✅ Đúng: ${data.correct} | ❌ Sai: ${data.wrong}`;
+    }
+  </script>
 </body>
 </html>
